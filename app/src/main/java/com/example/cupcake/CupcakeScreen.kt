@@ -94,26 +94,42 @@ fun CupcakeApp(
         ) {
             composable(route = CupcakeScreen.Start.name) {
                 StartOrderScreen(
-                    quantityOptions = quantityOptions
+                    quantityOptions = quantityOptions,
+                    onNextButtonClicked = {
+                        viewModel.setQuantity(it)
+                        navHostController.navigate(CupcakeScreen.Flavor.name)
+                    }
                 )
             }
             composable(route = CupcakeScreen.Flavor.name) {
                 SelectOptionScreen(
                     subtotal = uiState.price,
                     options = flavors.map { stringResource(id = it) },
-                    onSelectionChanged = { viewModel.setFlavor(it) }
+                    onSelectionChanged = { viewModel.setFlavor(it) },
+                    onNextButtonClicked = {
+                        navHostController.navigate(CupcakeScreen.Pickup.name)
+                    },
+                    onCancelButtonClicked = {}
                 )
             }
             composable(route = CupcakeScreen.Pickup.name) {
                 SelectOptionScreen(
                     subtotal = uiState.date,
                     options = uiState.pickupOptions,
-                    onSelectionChanged = { viewModel.setDate(it) }
+                    onSelectionChanged = { viewModel.setDate(it) },
+                    onNextButtonClicked = {
+                        navHostController.navigate(CupcakeScreen.Summary.name)
+                    },
+                    onCancelButtonClicked = {}
                 )
             }
             composable(route = CupcakeScreen.Summary.name) {
                 OrderSummaryScreen(
-                    orderUiState = uiState
+                    orderUiState = uiState,
+                    onSendButtonClicked = { subject: String, summary: String ->
+
+                    },
+                    onCancelButtonClicked = {}
                 )
             }
         }
