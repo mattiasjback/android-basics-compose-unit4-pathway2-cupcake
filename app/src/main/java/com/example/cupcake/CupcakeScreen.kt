@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -109,7 +110,9 @@ fun CupcakeApp(
                     onNextButtonClicked = {
                         navHostController.navigate(CupcakeScreen.Pickup.name)
                     },
-                    onCancelButtonClicked = {}
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navHostController)
+                    }
                 )
             }
             composable(route = CupcakeScreen.Pickup.name) {
@@ -120,7 +123,9 @@ fun CupcakeApp(
                     onNextButtonClicked = {
                         navHostController.navigate(CupcakeScreen.Summary.name)
                     },
-                    onCancelButtonClicked = {}
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navHostController)
+                    }
                 )
             }
             composable(route = CupcakeScreen.Summary.name) {
@@ -129,10 +134,23 @@ fun CupcakeApp(
                     onSendButtonClicked = { subject: String, summary: String ->
 
                     },
-                    onCancelButtonClicked = {}
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navHostController)
+                    }
                 )
             }
         }
     }
+
 }
 
+fun cancelOrderAndNavigateToStart(
+    viewModel: OrderViewModel,
+    navHostController: NavHostController
+) {
+    viewModel.resetOrder()
+    navHostController.popBackStack(
+        route = CupcakeScreen.Start.name,
+        inclusive = false
+    )
+}
